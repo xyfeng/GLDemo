@@ -315,6 +315,19 @@ static inline void Matrix3DSetPerspectiveProjectionWithFieldOfView
                                  near,
                                  far);
 }
+typedef GLfloat Matrix3D3by3[9];
+static inline void Matrix3DGet3by3Matrix(Matrix3D matrix, Matrix3D3by3 matrix3by3)
+{
+    matrix3by3[0] = matrix[0];
+    matrix3by3[1] = matrix[1];
+    matrix3by3[2] = matrix[2];
+    matrix3by3[3] = matrix[4];
+    matrix3by3[4] = matrix[5];
+    matrix3by3[5] = matrix[6];
+    matrix3by3[6] = matrix[8];
+    matrix3by3[7] = matrix[9];
+    matrix3by3[8] = matrix[10];
+}
 typedef struct 
 {
     GLfloat	s;

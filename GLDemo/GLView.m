@@ -70,6 +70,7 @@
     
     
     //Multi Sampling Buffers
+    /*
     glGenFramebuffers(1, &sampleFramebuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
     
@@ -85,12 +86,14 @@
     
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
+     
+     */
 }
 
 - (void)destroyBuffers
 {
-    const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
-    glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
+//    const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
+//    glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
     
     glDeleteFramebuffers(1, &frameBuffer);
     frameBuffer = 0;
@@ -107,13 +110,13 @@
 - (void)drawView
 {    
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+//    glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
     
     [controller draw];
     
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, frameBuffer);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
-    glResolveMultisampleFramebufferAPPLE();
+//    glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, frameBuffer);
+//    glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
+//    glResolveMultisampleFramebufferAPPLE();
     
     glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER];
