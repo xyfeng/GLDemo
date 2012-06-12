@@ -10,7 +10,7 @@ void main()
     int BlurAmount = 6;
     float halfBlur = float(BlurAmount) * 0.5;
     float deviation = halfBlur * 0.5;
-    highp vec4 colour = vec4(0.1, 0.1, 0.1, 0.3);
+    highp vec4 colour = vec4(0.1, 0.1, 0.1, 0.8);
     
     for (int i = 0; i < 10; ++i)
     {

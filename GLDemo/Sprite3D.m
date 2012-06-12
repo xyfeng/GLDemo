@@ -23,20 +23,21 @@ typedef struct {
 @interface Sprite3D()
 {
     GLuint      positionAttribute;
-    GLuint      matrixUniform;
-    GLuint      lightDirectionUniform;
+    GLuint      modelViewMatrixUniform;
+    GLuint      projectionMatrixUniform;
+    GLuint      lightPositionUniform;
     
     Matrix3D    rotationMatrix;
     Matrix3D    translationMatrix;
     Matrix3D    modelViewMatrix;
     Matrix3D    projectionMatrix;
-    Matrix3D    matrix;
     
+    //shadow 
     GLuint      shadowPositionAttribute;
-    GLuint      shadowMatrixUniform;
-    Matrix3D    shadowTranslationMatrix;
-    Matrix3D    shadowModelViewMatrix;
-    Matrix3D    shadowMatrix;
+    GLuint      shadowModelViewMatrixUniform;
+    GLuint      shadowProjectionMatrixUniform;
+    GLuint      shadowLightPositionUniform;
+    GLuint      shadowGroundZPositionUinform;
 }
 @property(nonatomic, assign) GLProgram *program3D;
 @property(nonatomic, assign) GLProgram *programShadow;
@@ -78,8 +79,9 @@ typedef struct {
         
         //create program for the shadow
         positionAttribute = [self.program3D attributeIndex:@"position"];
-        matrixUniform = [self.program3D uniformIndex:@"matrix"];
-        lightDirectionUniform = [self.program3D uniformIndex:@"lightDirection"];
+        modelViewMatrixUniform = [self.program3D uniformIndex:@"modelViewMatrix"];
+        projectionMatrixUniform = [self.program3D uniformIndex:@"projectionMatrix"];
+        lightPositionUniform = [self.program3D uniformIndex:@"lightPosition"];
         
         self.programShadow = [[GLProgram alloc] initWithVertexShaderFilename:@"VShaderShadow" fragmentShaderFilename:@"FShaderShadow"];
         [self.programShadow addAttribute:@"position"];
@@ -101,7 +103,10 @@ typedef struct {
         }
         
         shadowPositionAttribute = [self.programShadow attributeIndex:@"position"];
-        shadowMatrixUniform = [self.programShadow uniformIndex:@"matrix"];
+        shadowModelViewMatrixUniform = [self.programShadow uniformIndex:@"modelViewMatrix"];
+        shadowProjectionMatrixUniform = [self.programShadow uniformIndex:@"projectionMatrix"];
+        shadowLightPositionUniform = [self.programShadow uniformIndex:@"lightPosition"];
+        shadowGroundZPositionUinform = [self.programShadow uniformIndex:@"groundZPosition"];
         
         self.contentSize = contentSize;
         
@@ -138,17 +143,6 @@ typedef struct {
 - (void)draw
 {
     glEnable(GL_DEPTH_TEST);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    
-    [self.program3D use];
-    
-    // Set up light directions
-    glUniform3f(lightDirectionUniform, -0.2f, 0.2f, -1.f);
-    
-    long offset = (long)&_quad;
-    glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(RectVertex), (void *) (offset + offsetof(RectVertex, geometryVertex)));
-    glEnableVertexAttribArray(positionAttribute);
-    
     // Set the model-view transform
     static const Vertex3D rotationVector = {0.f, 1.f, 0.f};
     Matrix3DSetRotationByDegrees(rotationMatrix, self.angle, rotationVector);
@@ -157,31 +151,30 @@ typedef struct {
     
     // Set the projection transform
     Matrix3DSetPerspectiveProjectionWithFieldOfView(projectionMatrix, 45.f, 0.1f, 100.f, 1024.f/768.f);
-    Matrix3DMultiply(projectionMatrix, modelViewMatrix, matrix);
-    glUniformMatrix4fv(matrixUniform, 1, FALSE, matrix);
-    
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    
+    long offset = (long)&_quad;
     
     //cast shadow
-    //glBlendFunc( GL_SRC_COLOR, GL_DST_COLOR );
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     [self.programShadow use];
+    // Set up light directions
+    glUniform3f(shadowLightPositionUniform, -0.24f, 0.6f, 1.2f);
+    glUniform1f(shadowGroundZPositionUinform, -2.f);
+    glUniformMatrix4fv(shadowModelViewMatrixUniform, 1, FALSE, modelViewMatrix);
+    glUniformMatrix4fv(shadowProjectionMatrixUniform, 1, FALSE, projectionMatrix);
     glVertexAttribPointer(shadowPositionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(RectVertex), (void *) (offset + offsetof(RectVertex, geometryVertex)));
     glEnableVertexAttribArray(shadowPositionAttribute);
-    
-    Matrix3DSetTranslation(shadowTranslationMatrix, self.position.x + 0.15, self.position.y - 0.25, self.position.z - 2);
-    Matrix3DMultiply(shadowTranslationMatrix, rotationMatrix, shadowModelViewMatrix);
-    Matrix3D scaleMatrix;
-    Matrix3DSetScaling(scaleMatrix, 2.f, 2.f, 1.f);
-    Matrix3D newShadowMatrix;
-    Matrix3DMultiply(shadowModelViewMatrix, scaleMatrix, newShadowMatrix);
-    
-    // Set the projection transform
-    Matrix3DMultiply(projectionMatrix, newShadowMatrix, shadowMatrix);
-    glUniformMatrix4fv(matrixUniform, 1, FALSE, shadowMatrix);
-    
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    
+    //draw pages
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    [self.program3D use];
+    glUniform3f(lightPositionUniform, -0.24f, 0.6f, 1.2f);
+    glUniformMatrix4fv(modelViewMatrixUniform, 1, FALSE, modelViewMatrix);
+    glUniformMatrix4fv(projectionMatrixUniform, 1, FALSE, projectionMatrix);
+    glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(RectVertex), (void *) (offset + offsetof(RectVertex, geometryVertex)));
+    glEnableVertexAttribArray(positionAttribute);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
 }
 
 - (void)dealloc
