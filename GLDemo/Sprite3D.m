@@ -31,13 +31,21 @@ typedef struct {
     Matrix3D    modelViewMatrix;
     Matrix3D    projectionMatrix;
     Matrix3D    matrix;
+    
+    GLuint      shadowPositionAttribute;
+    GLuint      shadowMatrixUniform;
+    Matrix3D    shadowTranslationMatrix;
+    Matrix3D    shadowModelViewMatrix;
+    Matrix3D    shadowMatrix;
 }
 @property(nonatomic, assign) GLProgram *program3D;
+@property(nonatomic, assign) GLProgram *programShadow;
 @property(nonatomic, assign) RectQuad quad;
 @end
 
 @implementation Sprite3D
 @synthesize program3D = _program3D;
+@synthesize programShadow = _programShadow;
 @synthesize color = _color;
 @synthesize quad = _quad;
 @synthesize position = _position;
@@ -68,9 +76,32 @@ typedef struct {
             self.program3D = nil;
         }
         
+        //create program for the shadow
         positionAttribute = [self.program3D attributeIndex:@"position"];
         matrixUniform = [self.program3D uniformIndex:@"matrix"];
         lightDirectionUniform = [self.program3D uniformIndex:@"lightDirection"];
+        
+        self.programShadow = [[GLProgram alloc] initWithVertexShaderFilename:@"VShaderShadow" fragmentShaderFilename:@"FShaderShadow"];
+        [self.programShadow addAttribute:@"position"];
+        
+        if (![self.programShadow link])
+        {
+            NSLog(@"Link failed");
+            
+            NSString *progLog = [self.programShadow programLog];
+            NSLog(@"Program Log: %@", progLog); 
+            
+            NSString *fragLog = [self.programShadow fragmentShaderLog];
+            NSLog(@"Frag Log: %@", fragLog);
+            
+            NSString *vertLog = [self.programShadow vertexShaderLog];
+            NSLog(@"Vert Log: %@", vertLog);
+            
+            self.program3D = nil;
+        }
+        
+        shadowPositionAttribute = [self.programShadow attributeIndex:@"position"];
+        shadowMatrixUniform = [self.programShadow uniformIndex:@"matrix"];
         
         self.contentSize = contentSize;
         
@@ -106,11 +137,12 @@ typedef struct {
 
 - (void)draw
 {
+    glEnable(GL_DEPTH_TEST);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    
     [self.program3D use];
     
-    glEnable(GL_DEPTH_TEST);
-    
-    // Set up some default material parameters
+    // Set up light directions
     glUniform3f(lightDirectionUniform, -0.2f, 0.2f, -1.f);
     
     long offset = (long)&_quad;
@@ -129,11 +161,33 @@ typedef struct {
     glUniformMatrix4fv(matrixUniform, 1, FALSE, matrix);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    
+    
+    //cast shadow
+    //glBlendFunc( GL_SRC_COLOR, GL_DST_COLOR );
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    [self.programShadow use];
+    glVertexAttribPointer(shadowPositionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(RectVertex), (void *) (offset + offsetof(RectVertex, geometryVertex)));
+    glEnableVertexAttribArray(shadowPositionAttribute);
+    
+    Matrix3DSetTranslation(shadowTranslationMatrix, self.position.x + 0.15, self.position.y - 0.25, self.position.z - 2);
+    Matrix3DMultiply(shadowTranslationMatrix, rotationMatrix, shadowModelViewMatrix);
+    Matrix3D scaleMatrix;
+    Matrix3DSetScaling(scaleMatrix, 2.f, 2.f, 1.f);
+    Matrix3D newShadowMatrix;
+    Matrix3DMultiply(shadowModelViewMatrix, scaleMatrix, newShadowMatrix);
+    
+    // Set the projection transform
+    Matrix3DMultiply(projectionMatrix, newShadowMatrix, shadowMatrix);
+    glUniformMatrix4fv(matrixUniform, 1, FALSE, shadowMatrix);
+    
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
 - (void)dealloc
 {
     self.program3D = nil;
+    self.programShadow = nil;
     [super dealloc];
 }
 

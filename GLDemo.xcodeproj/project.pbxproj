@@ -24,6 +24,8 @@
 		87A11F341582945900896BCD /* FShader3D.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 87A11F321582945800896BCD /* FShader3D.glsl */; };
 		87A11F351582945900896BCD /* VShader3D.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 87A11F331582945900896BCD /* VShader3D.glsl */; };
 		87D95A3A15824EEE0056D45D /* Sprite2D.m in Sources */ = {isa = PBXBuildFile; fileRef = 87D95A3915824EEE0056D45D /* Sprite2D.m */; };
+		87EF21C315858F7500A572AC /* FShaderShadow.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 87EF21C115858F7500A572AC /* FShaderShadow.glsl */; };
+		87EF21C415858F7500A572AC /* VShaderShadow.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 87EF21C215858F7500A572AC /* VShaderShadow.glsl */; };
 		87FC3B7A157FE9B100AF16A4 /* VShader2D.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 87FC3B77157FE9B100AF16A4 /* VShader2D.glsl */; };
 		87FC3B7B157FE9B100AF16A4 /* FShader2D.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 87FC3B78157FE9B100AF16A4 /* FShader2D.glsl */; };
 		87FC3B7D15800F8B00AF16A4 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 87FC3B7C15800F8B00AF16A4 /* bg.png */; };
@@ -58,6 +60,8 @@
 		87A11F331582945900896BCD /* VShader3D.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VShader3D.glsl; sourceTree = "<group>"; };
 		87D95A3815824EEE0056D45D /* Sprite2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sprite2D.h; sourceTree = "<group>"; };
 		87D95A3915824EEE0056D45D /* Sprite2D.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sprite2D.m; sourceTree = "<group>"; };
+		87EF21C115858F7500A572AC /* FShaderShadow.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FShaderShadow.glsl; sourceTree = "<group>"; };
+		87EF21C215858F7500A572AC /* VShaderShadow.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VShaderShadow.glsl; sourceTree = "<group>"; };
 		87FC3B77157FE9B100AF16A4 /* VShader2D.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VShader2D.glsl; sourceTree = "<group>"; };
 		87FC3B78157FE9B100AF16A4 /* FShader2D.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FShader2D.glsl; sourceTree = "<group>"; };
 		87FC3B7C15800F8B00AF16A4 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg.png; sourceTree = "<group>"; };
@@ -117,6 +121,8 @@
 				87FC3B78157FE9B100AF16A4 /* FShader2D.glsl */,
 				87A11F331582945900896BCD /* VShader3D.glsl */,
 				87A11F321582945800896BCD /* FShader3D.glsl */,
+				87EF21C215858F7500A572AC /* VShaderShadow.glsl */,
+				87EF21C115858F7500A572AC /* FShaderShadow.glsl */,
 				8748CA01157FDF9D001D4BE6 /* GLClasses */,
 				87D95A3815824EEE0056D45D /* Sprite2D.h */,
 				87D95A3915824EEE0056D45D /* Sprite2D.m */,
@@ -214,6 +220,8 @@
 				87A11F271582807D00896BCD /* icon.png in Resources */,
 				87A11F341582945900896BCD /* FShader3D.glsl in Resources */,
 				87A11F351582945900896BCD /* VShader3D.glsl in Resources */,
+				87EF21C315858F7500A572AC /* FShaderShadow.glsl in Resources */,
+				87EF21C415858F7500A572AC /* VShaderShadow.glsl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
