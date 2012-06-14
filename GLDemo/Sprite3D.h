@@ -15,16 +15,17 @@ enum {
 };
 typedef NSInteger SpriteAlignment;
 
-@class GLProgram;
+@class GLProgram, GLTexture;
 
 @interface Sprite3D : NSObject
 @property(nonatomic, assign) Vertex3D position;
-@property(nonatomic, assign) Color    color;
 @property(nonatomic, assign) CGSize   contentSize;
 @property(nonatomic, assign) CGFloat  angle;
+@property(nonatomic, assign) GLuint   shadow;
 
 - (id)initWithContentSize:(CGSize)contentSize Alignment:(SpriteAlignment)alignment;
 - (void)update;
+- (void)drawShadow;
 - (void)draw;
 
 @end

@@ -2,6 +2,7 @@
 #import "GLView.h"
 #import "Sprite2D.h"
 #import "Sprite3D.h"
+#import "SpriteShadow.h"
 
 @implementation GLViewController
 {
@@ -11,6 +12,8 @@
 @synthesize bgSprite = _bgSprite;
 @synthesize leftPage = _leftPage;
 @synthesize rightPage = _rightPage;
+@synthesize rightPage2 = _rightPage2;
+@synthesize shadowLayer = _shadowLayer;
 
 - (id)init
 {
@@ -47,30 +50,29 @@
     [self.view addGestureRecognizer:pinch];
     [pinch release];
     
-    self.bgSprite = [[Sprite2D alloc] initWithFileName:@"bg.png"];
+    self.bgSprite = [[[Sprite2D alloc] initWithFileName:@"bg.png"] autorelease];;
     self.bgSprite.position = Vertex3DMake(512, 384, -1000);
+    self.shadowLayer = [[[SpriteShadow alloc] init] autorelease];
     
     pageOpenAngle = 15;
     velocity = 3;
     
-    self.leftPage = [[Sprite3D alloc] initWithContentSize:CGSizeMake(320, 480) Alignment:SPRITE_ALIGN_RIGHT];
-    self.rightPage = [[Sprite3D alloc] initWithContentSize:CGSizeMake(320, 480) Alignment:SPRITE_ALIGN_LEFT];
-    
+    self.leftPage = [[[Sprite3D alloc] initWithContentSize:CGSizeMake(320, 480) Alignment:SPRITE_ALIGN_RIGHT] autorelease];
+    self.rightPage = [[[Sprite3D alloc] initWithContentSize:CGSizeMake(320, 480) Alignment:SPRITE_ALIGN_LEFT] autorelease];
+    self.rightPage2 = [[[Sprite3D alloc] initWithContentSize:CGSizeMake(320, 480) Alignment:SPRITE_ALIGN_LEFT] autorelease];
+    self.leftPage.shadow = self.rightPage.shadow = self.shadowLayer.texture = [(GLView *)self.view shadowTexture];
     
 	glEnable(GL_CULL_FACE);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 }
+
 static int pinchEnded = 0;
-- (void)draw
+- (void)update
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    [self.bgSprite draw];
-    
-    if (pinchEnded == 1 && pageOpenAngle < 160) {
-        pageOpenAngle += (160 - pageOpenAngle)*0.2;
+    if (pinchEnded == 1 && pageOpenAngle < 120) {
+        pageOpenAngle += (120 - pageOpenAngle)*0.2;
     }
     else if(pinchEnded == -1 && pageOpenAngle > 15) {
         pageOpenAngle -= (pageOpenAngle - 15)*0.2;
@@ -81,13 +83,33 @@ static int pinchEnded = 0;
     
     self.leftPage.position = Vertex3DMake(0, 0, -1.5+(pageOpenAngle - 15)/300); 
     self.rightPage.position = Vertex3DMake(0, 0, -1.5+(pageOpenAngle - 15)/300);
-    self.leftPage.color = ColorMake(0.8, 0.8, 0.8, 1);
-    self.rightPage.color = ColorMake(0.9, 0.9, 0.9, 1);
     self.leftPage.angle = 90 - pageOpenAngle/2;
     self.rightPage.angle = pageOpenAngle/2 - 90;
+
+    self.rightPage2.position = Vertex3DMake(0, 0, -1.5+(pageOpenAngle - 15)/300);
+    self.rightPage2.angle = (pageOpenAngle+30)/2 - 90;
+    
+    [self.leftPage update];
+    [self.rightPage update];
+    [self.rightPage2 update];
+}
+
+- (void)drawShadow
+{
+    [self.leftPage drawShadow];
+    [self.rightPage drawShadow];
+    [self.rightPage2 drawShadow];
+}
+
+- (void)draw
+{
+    [self.bgSprite draw];
+    
+    [self.shadowLayer draw];
     
     [self.leftPage draw];
     [self.rightPage draw];
+    [self.rightPage2 draw];
 }
 
 #pragma mark - Gesture Recognizer
@@ -133,6 +155,7 @@ static BOOL openingPage;
     self.bgSprite = nil;
     self.leftPage = nil;
     self.rightPage = nil;
+    self.rightPage2 = nil;
     [super viewDidUnload];
 }
 - (void)dealloc 

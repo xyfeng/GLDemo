@@ -14,4 +14,5 @@
 @property (nonatomic) NSInteger animationFrameInterval;
 - (void)startAnimation;
 - (void)stopAnimation;
+- (GLuint)shadowTexture;
 @end

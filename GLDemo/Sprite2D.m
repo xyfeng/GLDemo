@@ -123,7 +123,6 @@ static GLProgram *GL2DProgram = nil;
     [self.program use];
     
     glDisable(GL_DEPTH_TEST);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     
     long offset = (long)&_quad;
     glVertexAttribPointer(positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void *) (offset + offsetof(TexturedVertex, geometryVertex)));
@@ -147,6 +146,9 @@ static GLProgram *GL2DProgram = nil;
     glUniform1i (textureUniform, 0);
     
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    
+    glDisableVertexAttribArray(positionAttribute);
+    glDisableVertexAttribArray(textureCoordinateAttribute);
 }
     
 - (void)dealloc
