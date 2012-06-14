@@ -93,12 +93,12 @@ typedef struct {
     
     glGenRenderbuffers(1, &sampleColorRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, sampleColorRenderbuffer);
-    glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 2, GL_RGBA8_OES, backingWidth, backingHeight);
+    glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 1, GL_RGBA8_OES, backingWidth, backingHeight);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, sampleColorRenderbuffer);
     
     glGenRenderbuffers(1, &sampleDepthRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, sampleDepthRenderbuffer);
-    glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT16, backingWidth, backingHeight);
+    glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER, 1, GL_DEPTH_COMPONENT16, backingWidth, backingHeight);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, sampleDepthRenderbuffer);
     
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)

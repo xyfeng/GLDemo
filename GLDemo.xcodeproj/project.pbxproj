@@ -124,8 +124,8 @@
 			isa = PBXGroup;
 			children = (
 				87FC3B7C15800F8B00AF16A4 /* bg.png */,
-				87EF21EA15897CD800A572AC /* FShaderBlur.glsl */,
 				87EF21ED15897CD800A572AC /* VShaderBlur.glsl */,
+				87EF21EA15897CD800A572AC /* FShaderBlur.glsl */,
 				87FC3B77157FE9B100AF16A4 /* VShader2D.glsl */,
 				87FC3B78157FE9B100AF16A4 /* FShader2D.glsl */,
 				87A11F331582945900896BCD /* VShader3D.glsl */,

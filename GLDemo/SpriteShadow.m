@@ -84,6 +84,12 @@ typedef struct {
         newQuad.tl.textureVertex = CGPointMake(0, 1);
         newQuad.tr.textureVertex = CGPointMake(1, 1);
         self.quad = newQuad;
+        
+//        double sigma = 5.0;
+//        double incrementalGaussianX = 1.0 / (sqrt(2.0 * M_PI) * sigma);
+//        double incrementalGaussianY = exp(-0.5 / (sigma * sigma));
+//        double incrementalGaussianZ = incrementalGaussianY * incrementalGaussianY;
+//        NSLog(@"%f,%f,%f", incrementalGaussianX, incrementalGaussianY, incrementalGaussianZ);
     }
     return self;
 }
@@ -126,8 +132,8 @@ typedef struct {
     Matrix3DSetOrthoProjection(projectionMatrix, 0.f, 1024.f, 0.f, 768.f, -1024.f, 1024.f);
     glUniformMatrix4fv(matrixUniform, 1, FALSE, projectionMatrix);
     
-    [self blurVertical];
     [self blurHorizontal];
+    [self blurVertical];
     
     glDisableVertexAttribArray(positionAttribute);
     glDisableVertexAttribArray(textureCoordinateAttribute);

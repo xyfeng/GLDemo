@@ -4,7 +4,7 @@ uniform float blurSize;
 uniform sampler2D texture;
 varying lowp vec2 fragmentTextureCoordinates;
 
-const float sigma = 3.0;
+const float sigma = 5.0;
 const float pi = 3.14159265;
 
 const float numBlurPixelsPerSide = 2.0;
@@ -18,21 +18,23 @@ void main()
     vec2  blurMultiplyVec;
     if (direction == 0)
     {
-        blurMultiplyVec = blurSize * vec2(1.0, 0.0);
+        blurMultiplyVec = blurSize * vec2(2.0, 0.0);
     }
     else {
-        blurMultiplyVec = blurSize * vec2(0.0, 1.0);
+        blurMultiplyVec = blurSize * vec2(0.0, 2.0);
     }
     fragmentColorOnEdge1 = texture2D(texture, fragmentTextureCoordinates - numBlurPixelsPerSide * blurMultiplyVec);
     fragmentColorOnEdge2 = texture2D(texture, fragmentTextureCoordinates + numBlurPixelsPerSide * blurMultiplyVec);
     
     if (fragmentColor.a > 0.0 || fragmentColorOnEdge1.a > 0.0 || fragmentColorOnEdge2.a > 0.0) 
     {
-        vec3 incrementalGaussian;
-        incrementalGaussian.x = 1.0 / (sqrt(2.0 * pi) * sigma);
-        incrementalGaussian.y = exp(-0.5 / (sigma * sigma));
-        incrementalGaussian.z = incrementalGaussian.y * incrementalGaussian.y;
+//        vec3 incrementalGaussian;
+//        incrementalGaussian.x = 1.0 / (sqrt(2.0 * pi) * sigma);
+//        incrementalGaussian.y = exp(-0.5 / (sigma * sigma));
+//        incrementalGaussian.z = incrementalGaussian.y * incrementalGaussian.y;
 
+        vec3 incrementalGaussian = vec3(0.079788,0.980199,0.960789);
+    
         vec2  blurMultiplyVec;
         if (direction == 0)
         {
