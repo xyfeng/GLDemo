@@ -59,7 +59,7 @@
     
     self.leftPage = [[[Sprite3D alloc] initWithContentSize:CGSizeMake(320, 480) Alignment:SPRITE_ALIGN_RIGHT] autorelease];
     self.rightPage = [[[Sprite3D alloc] initWithContentSize:CGSizeMake(320, 480) Alignment:SPRITE_ALIGN_LEFT] autorelease];
-    self.rightPage2 = [[[Sprite3D alloc] initWithContentSize:CGSizeMake(320, 480) Alignment:SPRITE_ALIGN_LEFT] autorelease];
+//    self.rightPage2 = [[[Sprite3D alloc] initWithContentSize:CGSizeMake(320, 480) Alignment:SPRITE_ALIGN_LEFT] autorelease];
     self.leftPage.shadow = self.rightPage.shadow = self.shadowLayer.texture = [(GLView *)self.view shadowTexture];
     
 	glEnable(GL_CULL_FACE);
@@ -86,19 +86,19 @@ static int pinchEnded = 0;
     self.leftPage.angle = 90 - pageOpenAngle/2;
     self.rightPage.angle = pageOpenAngle/2 - 90;
 
-    self.rightPage2.position = Vertex3DMake(0, 0, -1.5+(pageOpenAngle - 15)/300);
-    self.rightPage2.angle = (pageOpenAngle+30)/2 - 90;
+//    self.rightPage2.position = Vertex3DMake(0, 0, -1.5+(pageOpenAngle - 15)/300);
+//    self.rightPage2.angle = (pageOpenAngle+30)/2 - 90;
     
     [self.leftPage update];
     [self.rightPage update];
-    [self.rightPage2 update];
+//    [self.rightPage2 update];
 }
 
 - (void)drawShadow
 {
     [self.leftPage drawShadow];
     [self.rightPage drawShadow];
-    [self.rightPage2 drawShadow];
+//    [self.rightPage2 drawShadow];
 }
 
 - (void)draw
@@ -109,7 +109,7 @@ static int pinchEnded = 0;
     
     [self.leftPage draw];
     [self.rightPage draw];
-    [self.rightPage2 draw];
+//    [self.rightPage2 draw];
 }
 
 #pragma mark - Gesture Recognizer
@@ -155,7 +155,7 @@ static BOOL openingPage;
     self.bgSprite = nil;
     self.leftPage = nil;
     self.rightPage = nil;
-    self.rightPage2 = nil;
+//    self.rightPage2 = nil;
     [super viewDidUnload];
 }
 - (void)dealloc 

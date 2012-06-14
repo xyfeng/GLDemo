@@ -7,7 +7,7 @@ varying lowp vec2 fragmentTextureCoordinates;
 const float sigma = 5.0;
 const float pi = 3.14159265;
 
-const float numBlurPixelsPerSide = 2.0;
+const float numBlurPixelsPerSide = 4.0;
 
 void main()
 {
